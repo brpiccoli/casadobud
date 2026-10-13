@@ -15,12 +15,19 @@ interface DashboardChartBase {
   title: string;
   origin: ChartOrigin;
   footer: string;
+  isNew?: boolean;
+}
+
+export interface ChartLegend {
+  value: string;
+  comparison?: string;
 }
 
 export interface SeriesChart extends DashboardChartBase {
   kind: 'line' | 'bar' | 'area';
   points: ChartPoint[];
   highlightIndex?: number;
+  legend?: ChartLegend;
 }
 
 export interface DonutChart extends DashboardChartBase {
