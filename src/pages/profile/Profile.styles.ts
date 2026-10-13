@@ -1,0 +1,38 @@
+export const profilePageStyles = {
+  root: 'mx-auto flex w-full max-w-[1180px] flex-1 flex-col px-4 pt-8 pb-8 @xl/main:px-6 @3xl/main:px-8 @3xl/main:pt-10',
+  header: 'flex flex-col gap-1.5',
+  title: 'font-heading text-[32px] leading-none text-body @3xl/main:text-[40px]',
+  subtitle: 'text-sm text-muted-foreground',
+  grid: 'mt-6 grid grid-cols-1 gap-3 @xl/main:gap-4 @3xl/main:mt-8 @4xl/main:grid-cols-2',
+  section:
+    '@container flex min-w-0 flex-col gap-5 rounded-2xl border border-border bg-card/60 p-4 @xl/main:p-5',
+  sectionTitle: 'font-heading text-xl text-body',
+  identityRow: 'flex items-center gap-4',
+  avatar: 'size-14',
+  avatarFallback: 'bg-gradient-end text-lg text-body',
+  identity: 'flex min-w-0 flex-1 flex-col',
+  identityName: 'truncate text-base text-body',
+  identityRole: 'truncate text-xs text-muted-foreground',
+  fieldsRow: 'grid grid-cols-1 gap-3 @lg:grid-cols-2',
+  field: 'flex flex-col gap-2',
+  fieldLabel: 'text-xs font-normal text-muted-foreground',
+  input:
+    'h-11 rounded-lg border-border bg-muted px-3.5 text-sm text-body placeholder:text-label-muted dark:bg-muted',
+  fieldError: 'text-xs text-destructive',
+  inlineActions: 'flex items-center gap-2',
+  pillButton: 'h-9 gap-2 px-4 text-[13px] font-normal',
+  securityForm: 'flex flex-col gap-5',
+  securitySubmit: 'h-9 w-fit gap-2 px-4 text-[13px] font-normal',
+  preferenceList: 'flex flex-col gap-4',
+  preferenceRow: 'flex items-center gap-3',
+  preferenceIcon: 'size-4 shrink-0 text-muted-foreground',
+  preferenceLabel: 'flex-1 text-sm text-foreground',
+  comingSoon: 'text-[11px] text-label-muted',
+  languagePill:
+    'inline-flex h-8 items-center gap-1.5 rounded-full border border-chip-border bg-chip px-3 text-xs text-muted-foreground',
+  planTag:
+    'w-fit rounded-full bg-mint/15 px-2.5 py-1 text-[10px] font-medium tracking-[0.12em] text-mint uppercase',
+  planText: 'text-sm text-muted-foreground',
+  planLink: 'w-fit text-sm text-mint transition-opacity hover:opacity-80',
+  footer: 'mt-auto pt-10',
+} as const;
