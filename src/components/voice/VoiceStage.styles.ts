@@ -1,0 +1,20 @@
+export const voiceStageStyles = {
+  stage: 'flex w-full max-w-[760px] flex-col items-center',
+  stageLive: 'gap-8.5',
+  stageWork: 'gap-5.5',
+  stageConfirm: 'gap-5',
+  title: 'text-center font-heading text-title text-foreground',
+  speaker: 'text-overline uppercase text-foreground-subtle',
+  quote: 'max-w-[760px] text-center font-heading text-headline text-foreground',
+  quoteLive: 'max-w-[544px] text-center font-heading text-title text-foreground',
+  userBlock: 'flex w-full max-w-[640px] flex-col items-center gap-2.5',
+  userBubble:
+    'relative max-w-full rounded-panel bg-pill px-6 py-3.75 text-center text-lead text-foreground',
+  caret: 'ml-1 inline-block h-4 w-2 rounded-sm bg-mint align-middle animate-caret',
+  plain: 'max-w-[520px] text-center text-caption text-muted-foreground',
+  plainHighlight: 'font-medium text-mint-ink',
+  confirmActions: 'flex flex-wrap items-center justify-center gap-3 pt-2',
+  confirmYes: 'h-11.5 gap-2 px-5.5 text-[15px]',
+  confirmAdjust: 'h-11.5 gap-2 px-5.5 text-[15px] text-muted-foreground',
+  confirmHint: 'text-meta text-foreground-subtle',
+} as const;

@@ -26,7 +26,7 @@ describe('runBudTurn com o cérebro local', () => {
     expect(draft.versions[0].tipo).toBe('linha');
   });
 
-  it('o gráfico só muda através das tools (sequência consultar → criar)', async () => {
+  it('o gráfico só muda através das tools (sequência consultar → criar → abrir no builder)', async () => {
     const harness = createBudHarness();
     const { events } = await harness.send(
       'Bud, cria um gráfico de check-ins por dia do Sub-17 na última semana',
@@ -36,8 +36,28 @@ describe('runBudTurn com o cérebro local', () => {
     expect(toolEvents.map((event) => event.type === 'tool_result' && event.call.nome)).toEqual([
       'consultar_metricas',
       'criar_grafico',
+      'abrir_no_builder',
     ]);
     expect(events.at(-1)?.type).toBe('done');
+  });
+
+  it('roteamento: pedido de gráfico no chat abre o builder, análise continua no chat', async () => {
+    const harness = createBudHarness();
+
+    const chart = await harness.send('Crie um gráfico de check-ins');
+    const [graphId] = chart.result.graphIds;
+    expect(chart.result.openBuilderGraphId).toBe(graphId);
+    expect(chart.result.text).toContain('Vou abrir nos Gráficos');
+
+    const analysis = await createBudHarness().send('Como está o ritmo do time nesta semana?');
+    expect(analysis.result.openBuilderGraphId).toBeNull();
+    expect(analysis.result.graphIds).toHaveLength(1);
+
+    const onBuilder = await createBudHarness().send(
+      'Crie um gráfico de check-ins',
+      buildTestContext({ screen: 'builder' }),
+    );
+    expect(onBuilder.toolNames).not.toContain('abrir_no_builder');
   });
 
   it('salvar pede confirmação e salva só depois do "sim"', async () => {

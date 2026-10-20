@@ -1,7 +1,11 @@
 import { subDays, subHours } from 'date-fns';
 
 import type { StaffConversation } from './conversations.types';
-import { filterConversations, groupConversationsByRecency } from './conversations.utils';
+import {
+  buildSearchExcerpt,
+  filterConversations,
+  groupConversationsByRecency,
+} from './conversations.utils';
 
 const NOW = new Date('2026-09-29T15:00:00');
 
@@ -68,5 +72,35 @@ describe('filterConversations', () => {
 
   it('retorna tudo quando a busca está vazia', () => {
     expect(filterConversations(conversations, '   ')).toHaveLength(3);
+  });
+});
+
+describe('buildSearchExcerpt', () => {
+  it('separa o trecho encontrado preservando o texto original', () => {
+    expect(buildSearchExcerpt('O ritmo geral se manteve estável', 'RITMO')).toEqual({
+      before: 'O ',
+      match: 'ritmo',
+      after: ' geral se manteve estável',
+    });
+  });
+
+  it('encontra termos sem acento em texto acentuado', () => {
+    expect(buildSearchExcerpt('Preparação para o clássico', 'classico')?.match).toBe('clássico');
+  });
+
+  it('recorta o início longo em uma quebra de palavra com reticências', () => {
+    const excerpt = buildSearchExcerpt(
+      'Cinco atletas não fizeram check-in nos últimos quatro dias de treino',
+      'treino',
+    );
+
+    expect(excerpt?.before.startsWith('...')).toBe(true);
+    expect(excerpt?.before.endsWith('de ')).toBe(true);
+    expect(excerpt?.match).toBe('treino');
+  });
+
+  it('retorna null quando o termo não aparece ou a busca está vazia', () => {
+    expect(buildSearchExcerpt('Sono do elenco', 'ritmo')).toBeNull();
+    expect(buildSearchExcerpt('Sono do elenco', '  ')).toBeNull();
   });
 });

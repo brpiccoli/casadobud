@@ -28,6 +28,8 @@ export interface BudStore {
   appendMessage: (threadKey: string, message: BudChatMessage) => void;
   updateMessage: (threadKey: string, messageId: string, patch: Partial<BudChatMessage>) => void;
   updateThread: (threadKey: string, patch: Partial<Omit<BudThread, 'messages'>>) => void;
+  replaceThread: (threadKey: string, thread: BudThread) => void;
+  removeThread: (threadKey: string) => void;
 }
 
 export const EMPTY_THREAD: BudThread = {
@@ -139,6 +141,17 @@ export function createBudStore(initialState: BudState = { drafts: {}, threads: {
       })),
     updateThread: (threadKey, patch) =>
       updateThreadState(threadKey, (thread) => ({ ...thread, ...patch })),
+    replaceThread: (threadKey, thread) =>
+      setState((current) => ({
+        ...current,
+        threads: { ...current.threads, [threadKey]: thread },
+      })),
+    removeThread: (threadKey) =>
+      setState((current) => {
+        if (!current.threads[threadKey]) return current;
+        const { [threadKey]: _removed, ...threads } = current.threads;
+        return { ...current, threads };
+      }),
   };
 }
 

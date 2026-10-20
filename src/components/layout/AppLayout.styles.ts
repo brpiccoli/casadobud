@@ -1,6 +1,6 @@
 export const appLayoutStyles = {
   root: 'flex h-svh overflow-hidden bg-background',
-  main: '@container/main relative flex min-w-0 flex-1 flex-col overflow-y-auto',
+  main: '@container/main relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto',
   drawer:
     'gap-0 border-sidebar-border bg-sidebar p-0 data-[side=left]:w-[300px] data-[side=left]:max-w-[85vw] data-[side=left]:sm:max-w-[300px]',
   drawerSidebar: 'w-full border-r-0',

@@ -2,6 +2,16 @@ import { subDays, subHours } from 'date-fns';
 
 import type { StaffConversation } from './conversations.types';
 
+export const CONVERSATION_SEED_PROMPTS: Record<string, string[]> = {
+  'ritmo-semana-39': ['Como está o ritmo do time nesta semana?', 'Consegue deixar em barras por dia?'],
+  'checkins-por-dia': ['Cria um gráfico de check-ins por dia do Sub-17'],
+  'preparacao-classico': ['Como está o humor do Sub-17 nesta semana?'],
+  'sono-viagem': ['Como foi o sono do elenco nos últimos 7 dias?'],
+  'resumo-pos-jogo': ['O que mudou desde ontem?'],
+  'pouco-engajamento': ['Como está o engajamento do elenco no mês?'],
+  'falar-sub-17': ['Como o time está essa semana?'],
+};
+
 export function buildStaffConversationsMock(now: Date = new Date()): StaffConversation[] {
   return [
     {

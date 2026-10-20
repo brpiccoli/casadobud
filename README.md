@@ -56,5 +56,5 @@ src/
 
 ## O que ainda é mock
 
-- Conversas do staff (`features/conversations/conversations.service.ts`) e gráficos do dashboard (`features/charts/charts.service.ts`) — dependem das novas tabelas e da agregação dos check-ins no Supabase.
-- Envio de mensagem, anexos, ditado, voz, editar layout, novo gráfico, renomear e expandir mostram "Em breve".
+- Conversas do staff (`features/conversations/conversations.service.ts`) e gráficos do dashboard (`features/charts/charts.service.ts`) — dependem das novas tabelas e da agregação dos check-ins no Supabase. O layout do dashboard persiste por usuário no localStorage até existir a tabela.
+- Envio de mensagem, anexos, ditado e voz mostram "Em breve".

@@ -1,8 +1,15 @@
 export type ChartOrigin = 'preset' | 'custom';
 
-export type DashboardPeriod = 'last30Days' | 'last90Days' | 'season';
+export type DashboardPeriod = 'last7Days' | 'last30Days' | 'last90Days' | 'season';
 
 export type KpiTrend = 'up' | 'down' | 'flat';
+
+export interface ChartLayout {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
 
 export interface ChartPoint {
   label: string;
@@ -15,6 +22,7 @@ interface DashboardChartBase {
   title: string;
   origin: ChartOrigin;
   footer: string;
+  layout: ChartLayout;
   isNew?: boolean;
 }
 
@@ -45,3 +53,9 @@ export interface KpiChart extends DashboardChartBase {
 export type DashboardChart = SeriesChart | DonutChart | KpiChart;
 
 export type ChartKind = DashboardChart['kind'];
+
+export interface StoredDashboard {
+  version: 1;
+  initialized: boolean;
+  items: DashboardChart[];
+}

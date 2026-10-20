@@ -34,9 +34,17 @@ export async function updateStaffProfile(
   userId: string,
   update: StaffProfileUpdate,
 ): Promise<void> {
-  const { error } = await supabase.from('profiles').update(update).eq('user_id', userId);
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(update)
+    .eq('user_id', userId)
+    .select('user_id');
 
   if (error) {
     throw error;
+  }
+
+  if (data.length === 0) {
+    throw new Error('Perfil não encontrado para salvar as preferências.');
   }
 }

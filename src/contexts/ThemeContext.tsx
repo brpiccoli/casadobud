@@ -2,117 +2,66 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react';
 import { toast } from 'sonner';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { applyThemeMode, getThemeMode, subscribeToThemeMode } from '@/features/theme/theme.store';
+import type { ThemeMode } from '@/features/theme/theme.types';
+import { darkModeFromThemeMode, themeModeFromDarkMode } from '@/features/theme/theme.utils';
 import { useStaffProfileQuery, useUpdateStaffProfileMutation } from '@/hooks/useStaffProfileQuery';
 
-export type ThemeMode = 'light' | 'dark';
-export type ThemePreference = ThemeMode | 'system';
-
-const THEME_STORAGE_KEY = 'casadobud:theme-preference';
-const DARK_SCHEME_QUERY = '(prefers-color-scheme: dark)';
-
-function readSystemMode(): ThemeMode {
-  return window.matchMedia(DARK_SCHEME_QUERY).matches ? 'dark' : 'light';
-}
-
-function readStoredPreference(): ThemePreference {
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
-  return 'system';
-}
-
-function preferenceFromProfile(darkMode: boolean | null | undefined): ThemePreference | null {
-  if (darkMode === true) return 'dark';
-  if (darkMode === false) return 'light';
-  return null;
-}
-
-function darkModeFromPreference(preference: ThemePreference): boolean | null {
-  if (preference === 'dark') return true;
-  if (preference === 'light') return false;
-  return null;
-}
+export type { ThemeMode } from '@/features/theme/theme.types';
 
 interface ThemeContextType {
   mode: ThemeMode;
-  preference: ThemePreference;
   isDarkMode: boolean;
-  setPreference: (preference: ThemePreference) => Promise<void>;
+  setMode: (mode: ThemeMode) => Promise<void>;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface LocalThemeChoice {
-  userId: string | null;
-  preference: ThemePreference;
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
-  const userId = user?.id ?? null;
   const { data: profile } = useStaffProfileQuery();
   const { mutateAsync: updateProfile } = useUpdateStaffProfileMutation();
-  const [storedPreference] = useState<ThemePreference>(readStoredPreference);
-  const [localChoice, setLocalChoice] = useState<LocalThemeChoice | null>(null);
-  const [systemMode, setSystemMode] = useState<ThemeMode>(readSystemMode);
-
-  const preference: ThemePreference =
-    (localChoice?.userId === userId ? localChoice.preference : null) ??
-    preferenceFromProfile(profile?.dark_mode) ??
-    storedPreference;
-
-  const mode: ThemeMode = preference === 'system' ? systemMode : preference;
-
-  useEffect(() => {
-    const media = window.matchMedia(DARK_SCHEME_QUERY);
-    const handleChange = () => setSystemMode(readSystemMode());
-    media.addEventListener('change', handleChange);
-    return () => media.removeEventListener('change', handleChange);
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, preference);
-  }, [preference]);
+  const mode = useSyncExternalStore(subscribeToThemeMode, getThemeMode);
+  const accountMode = profile ? themeModeFromDarkMode(profile.dark_mode) : null;
 
   useLayoutEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', mode === 'dark');
-    root.style.colorScheme = mode;
-  }, [mode]);
+    if (!accountMode) return;
+    applyThemeMode(accountMode);
+  }, [accountMode]);
 
-  const setPreference = useCallback(
-    async (nextPreference: ThemePreference) => {
-      const previous = preference;
-      setLocalChoice({ userId, preference: nextPreference });
+  const setMode = useCallback(
+    async (nextMode: ThemeMode) => {
+      const previousMode = getThemeMode();
+      if (nextMode === previousMode) return;
 
-      if (!userId) return;
+      applyThemeMode(nextMode);
+      if (!user) return;
 
       try {
-        await updateProfile({ dark_mode: darkModeFromPreference(nextPreference) });
+        await updateProfile({ dark_mode: darkModeFromThemeMode(nextMode) });
       } catch {
-        setLocalChoice({ userId, preference: previous });
+        applyThemeMode(previousMode);
         toast.error('Não foi possível salvar sua preferência de tema.');
       }
     },
-    [preference, updateProfile, userId],
+    [updateProfile, user],
   );
 
   const value = useMemo<ThemeContextType>(
     () => ({
       mode,
-      preference,
       isDarkMode: mode === 'dark',
-      setPreference,
+      setMode,
     }),
-    [mode, preference, setPreference],
+    [mode, setMode],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

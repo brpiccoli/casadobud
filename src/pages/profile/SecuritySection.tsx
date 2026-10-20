@@ -64,7 +64,7 @@ export function SecuritySection() {
         </div>
         <Button
           type="submit"
-          variant="pill"
+          variant="ghost"
           className={styles.securitySubmit}
           disabled={isSubmitting}
         >

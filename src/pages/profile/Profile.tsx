@@ -35,7 +35,7 @@ export function Profile() {
       </div>
 
       <div className={styles.footer}>
-        <Button variant="pill" className={styles.pillButton} onClick={() => void handleSignOut()}>
+        <Button variant="ghost" onClick={() => void handleSignOut()}>
           <LogOut />
           Sair da conta
         </Button>

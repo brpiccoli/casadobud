@@ -129,6 +129,21 @@ export const GROUPING_PLAIN_LANGUAGE: Record<GraphGrouping, string> = {
   grupo: 'em cada grupo',
 };
 
+export const METRIC_SUBJECTS: Record<BudMetric, { text: string; plural: boolean }> = {
+  check_ins: { text: 'os check-ins', plural: true },
+  sono: { text: 'o sono', plural: false },
+  humor: { text: 'o humor', plural: false },
+  engajamento: { text: 'o engajamento', plural: false },
+  ritmo: { text: 'o ritmo', plural: false },
+};
+
+export const GROUPING_PHRASES: Record<GraphGrouping, string> = {
+  dia_semana: 'dia a dia',
+  data: 'data a data',
+  atleta: 'atleta por atleta',
+  grupo: 'por grupo',
+};
+
 export const WEEKDAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] as const;
 
 export const WEEKDAY_FULL_LABELS = [

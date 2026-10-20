@@ -1,3 +1,5 @@
+import { Trash2 } from 'lucide-react';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -6,6 +8,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
@@ -19,9 +22,10 @@ export function DeleteChartDialog({ chartTitle, onCancel, onConfirm }: DeleteCha
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="font-heading text-xl font-normal">
-            Excluir gráfico?
-          </AlertDialogTitle>
+          <AlertDialogMedia className="bg-destructive/12 text-destructive">
+            <Trash2 />
+          </AlertDialogMedia>
+          <AlertDialogTitle>Excluir gráfico?</AlertDialogTitle>
           <AlertDialogDescription>
             “{chartTitle}” sai do dashboard. Você pode desfazer logo em seguida.
           </AlertDialogDescription>

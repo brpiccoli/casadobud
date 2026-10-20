@@ -17,7 +17,7 @@ export function ChartCardMenu({ chartTitle, onAction }: ChartCardMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
+          variant="quiet"
           size="icon-xs"
           className={styles.menuTrigger}
           aria-label={`Opções do gráfico ${chartTitle}`}

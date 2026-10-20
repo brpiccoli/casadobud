@@ -57,7 +57,7 @@ export function ForgotPassword() {
           <p className={styles.sentText}>
             Enviamos o link de redefinição para <span className={styles.sentEmail}>{sentTo}</span>.
           </p>
-          <Button asChild variant="cta" size="xl" className={styles.submit}>
+          <Button asChild size="xl" className={styles.submit}>
             <Link to={ROUTES.login}>Voltar ao login</Link>
           </Button>
           <p className={styles.resendRow}>
@@ -99,16 +99,10 @@ export function ForgotPassword() {
           {...register('email')}
         />
 
-        <Button
-          type="submit"
-          variant="cta"
-          size="xl"
-          className={styles.submit}
-          disabled={isSubmitting}
-        >
+        <Button type="submit" size="xl" className={styles.submit} disabled={isSubmitting}>
           {isSubmitting ? 'Enviando…' : 'Enviar link'}
         </Button>
-        <Button asChild variant="ghost" size="xl" className={styles.secondaryAction}>
+        <Button asChild variant="quiet" size="xl" className={styles.secondaryAction}>
           <Link to={ROUTES.login}>Voltar ao login</Link>
         </Button>
       </form>

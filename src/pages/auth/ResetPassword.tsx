@@ -47,7 +47,7 @@ export function ResetPassword() {
         title="Link expirado"
         subtitle="Esse link de redefinição não é mais válido. Peça um novo para continuar."
       >
-        <Button asChild variant="cta" size="xl" className={styles.submit}>
+        <Button asChild size="xl" className={styles.submit}>
           <Link to={ROUTES.forgotPassword}>Pedir novo link</Link>
         </Button>
       </AuthLayout>
@@ -84,13 +84,7 @@ export function ResetPassword() {
           />
         </div>
 
-        <Button
-          type="submit"
-          variant="cta"
-          size="xl"
-          className={styles.submit}
-          disabled={isSubmitting}
-        >
+        <Button type="submit" size="xl" className={styles.submit} disabled={isSubmitting}>
           {isSubmitting ? 'Salvando…' : 'Salvar nova senha'}
         </Button>
       </form>

@@ -22,6 +22,13 @@ export interface SidebarConversationListProps {
   onNavigate?: () => void;
 }
 
+export interface SidebarSearchResultProps {
+  conversation: StaffConversation;
+  searchQuery: string;
+  isActive: boolean;
+  onNavigate?: () => void;
+}
+
 export interface SidebarUserMenuProps {
   onNavigate?: () => void;
 }

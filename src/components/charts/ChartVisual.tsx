@@ -11,6 +11,7 @@ import {
   Pie,
   PieChart,
   ResponsiveContainer,
+  XAxis,
   YAxis,
 } from 'recharts';
 
@@ -25,6 +26,11 @@ const GRID_PROPS = {
   vertical: false,
 } as const;
 
+const AXIS_TICK = {
+  fill: CHART_COLORS.axis,
+  fontSize: 12,
+} as const;
+
 function HighlightDot({ cx, cy, index, highlightIndex }: HighlightDotProps) {
   if (index !== highlightIndex || cx === undefined || cy === undefined) {
     return <g key={`dot-${index}`} />;
@@ -32,13 +38,19 @@ function HighlightDot({ cx, cy, index, highlightIndex }: HighlightDotProps) {
   return <circle key={`dot-${index}`} cx={cx} cy={cy} r={4} fill={CHART_COLORS.primary} />;
 }
 
-function LineVisual({ chart }: { chart: SeriesChart }) {
+function Axis({ show }: { show?: boolean }) {
+  if (!show) return null;
+  return <XAxis dataKey="label" axisLine={false} tickLine={false} tick={AXIS_TICK} interval={0} />;
+}
+
+function LineVisual({ chart, showAxis }: { chart: SeriesChart; showAxis?: boolean }) {
   const hasComparison = chart.points.some((point) => point.comparison !== undefined);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={chart.points} margin={{ top: 12, right: 8, bottom: 4, left: 8 }}>
+      <LineChart data={chart.points} margin={{ top: 12, right: 8, bottom: showAxis ? 8 : 4, left: 8 }}>
         <CartesianGrid {...GRID_PROPS} />
+        <Axis show={showAxis} />
         <YAxis hide domain={['dataMin - 12', 'dataMax + 12']} />
         {hasComparison ? (
           <Line
@@ -71,44 +83,77 @@ function LineVisual({ chart }: { chart: SeriesChart }) {
   );
 }
 
-function BarVisual({ chart }: { chart: SeriesChart }) {
+function BarVisual({ chart, showAxis }: { chart: SeriesChart; showAxis?: boolean }) {
+  const hasComparison = chart.points.some((point) => point.comparison !== undefined);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={chart.points}
-        margin={{ top: 12, right: 8, bottom: 4, left: 8 }}
-        barCategoryGap="28%"
+        margin={{ top: 12, right: 8, bottom: showAxis ? 8 : 4, left: 8 }}
+        barCategoryGap={hasComparison ? '18%' : '28%'}
+        barGap={4}
       >
         <CartesianGrid {...GRID_PROPS} />
+        <Axis show={showAxis} />
         <YAxis hide />
-        <Bar dataKey="value" radius={[4, 4, 4, 4]} isAnimationActive={false}>
-          {chart.points.map((point, index) => (
-            <Cell
-              key={point.label}
-              fill={
-                index === chart.highlightIndex ? CHART_COLORS.primary : CHART_COLORS.inactiveBar
-              }
+        {hasComparison ? (
+          <>
+            <Bar
+              dataKey="value"
+              fill={CHART_COLORS.primary}
+              radius={[4, 4, 4, 4]}
+              isAnimationActive={false}
             />
-          ))}
-        </Bar>
+            <Bar
+              dataKey="comparison"
+              fill={CHART_COLORS.secondary}
+              radius={[4, 4, 4, 4]}
+              isAnimationActive={false}
+            />
+          </>
+        ) : (
+          <Bar dataKey="value" radius={[4, 4, 4, 4]} isAnimationActive={false}>
+            {chart.points.map((point, index) => (
+              <Cell
+                key={point.label}
+                fill={
+                  index === chart.highlightIndex ? CHART_COLORS.primary : CHART_COLORS.inactiveBar
+                }
+              />
+            ))}
+          </Bar>
+        )}
       </BarChart>
     </ResponsiveContainer>
   );
 }
 
-function AreaVisual({ chart }: { chart: SeriesChart }) {
+function AreaVisual({ chart, showAxis }: { chart: SeriesChart; showAxis?: boolean }) {
   const gradientId = useId();
+  const hasComparison = chart.points.some((point) => point.comparison !== undefined);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={chart.points} margin={{ top: 12, right: 0, bottom: 0, left: 0 }}>
+      <AreaChart data={chart.points} margin={{ top: 12, right: 8, bottom: showAxis ? 8 : 0, left: 8 }}>
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={CHART_COLORS.primary} stopOpacity={0.28} />
             <stop offset="100%" stopColor={CHART_COLORS.primary} stopOpacity={0} />
           </linearGradient>
         </defs>
+        <Axis show={showAxis} />
         <YAxis hide domain={[0, 'dataMax + 10']} />
+        {hasComparison ? (
+          <Area
+            type="monotone"
+            dataKey="comparison"
+            stroke={CHART_COLORS.secondary}
+            strokeWidth={1.5}
+            fill="transparent"
+            isAnimationActive={false}
+          />
+        ) : null}
         <Area
           type="monotone"
           dataKey="value"
@@ -155,15 +200,15 @@ function DonutVisual({ chart }: { chart: DonutChart }) {
   );
 }
 
-export function ChartVisual({ chart }: ChartVisualProps) {
+export function ChartVisual({ chart, showAxis = false }: ChartVisualProps) {
   if (chart.kind === 'donut') return <DonutVisual chart={chart} />;
 
   switch (chart.kind) {
     case 'line':
-      return <LineVisual chart={chart} />;
+      return <LineVisual chart={chart} showAxis={showAxis} />;
     case 'bar':
-      return <BarVisual chart={chart} />;
+      return <BarVisual chart={chart} showAxis={showAxis} />;
     case 'area':
-      return <AreaVisual chart={chart} />;
+      return <AreaVisual chart={chart} showAxis={showAxis} />;
   }
 }

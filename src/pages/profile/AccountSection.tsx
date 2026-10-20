@@ -48,57 +48,43 @@ export function AccountSection() {
       </h2>
 
       <div className={styles.identityRow}>
-        <Avatar className={styles.avatar}>
+        <Avatar size="lg">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
-          <AvatarFallback className={styles.avatarFallback}>{initials}</AvatarFallback>
+          <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className={styles.identity}>
           <span className={styles.identityName}>{displayName}</span>
           {roleLabel ? <span className={styles.identityRole}>{roleLabel}</span> : null}
         </div>
-        <Button
-          variant="pill"
-          className={styles.pillButton}
-          onClick={() => toast.info(COMING_SOON_MESSAGE)}
-        >
+        <Button variant="ghost" size="sm" onClick={() => toast.info(COMING_SOON_MESSAGE)}>
           Alterar foto
         </Button>
       </div>
 
       <form className={styles.fieldsRow} onSubmit={onSubmit} noValidate>
         <div className={styles.field}>
-          <Label htmlFor="profile-name" className={styles.fieldLabel}>
-            Nome
-          </Label>
+          <Label htmlFor="profile-name">Nome</Label>
           <Input
             id="profile-name"
             autoComplete="name"
             aria-invalid={errors.name ? true : undefined}
-            className={styles.input}
             {...register('name')}
           />
           {errors.name ? <p className={styles.fieldError}>{errors.name.message}</p> : null}
         </div>
         <div className={styles.field}>
-          <Label htmlFor="profile-email" className={styles.fieldLabel}>
-            Email
-          </Label>
-          <Input id="profile-email" value={email} readOnly className={styles.input} />
+          <Label htmlFor="profile-email">Email</Label>
+          <Input id="profile-email" value={email} readOnly />
         </div>
         {isDirty ? (
           <div className={styles.inlineActions}>
-            <Button
-              type="submit"
-              variant="cta"
-              className={styles.pillButton}
-              disabled={isSubmitting}
-            >
+            <Button type="submit" size="sm" disabled={isSubmitting}>
               {isSubmitting ? 'Salvando…' : 'Salvar'}
             </Button>
             <Button
               type="button"
-              variant="ghost"
-              className={styles.pillButton}
+              variant="quiet"
+              size="sm"
               onClick={() => reset({ name: displayName })}
             >
               Cancelar

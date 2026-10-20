@@ -67,6 +67,14 @@ export interface GraphDraft {
 
 export type BudMessageRole = 'user' | 'bud';
 
+export type BudAttachmentKind = 'image' | 'file' | 'companion';
+
+export interface BudMessageAttachment {
+  id: string;
+  kind: BudAttachmentKind;
+  name: string;
+}
+
 export interface BudChatMessage {
   id: string;
   role: BudMessageRole;
@@ -75,6 +83,8 @@ export interface BudChatMessage {
   graphIds: string[];
   redirectGraphId: string | null;
   confirmationGraphId: string | null;
+  attachments?: BudMessageAttachment[];
+  graphVersionIndexes?: Record<string, number>;
 }
 
 export interface BudThread {

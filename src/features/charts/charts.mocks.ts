@@ -1,3 +1,4 @@
+import { DEFAULT_CHART_LAYOUTS } from './charts.constants';
 import type { DashboardChart } from './charts.types';
 
 const WEEKDAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -10,6 +11,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'preset',
       title: 'Gráfico de linha (placeholder)',
       footer: 'Atualizado há 2 horas · dados do companion',
+      layout: DEFAULT_CHART_LAYOUTS['line-placeholder'],
       points: [
         { label: 'S1', value: 42, comparison: 30 },
         { label: 'S2', value: 55, comparison: 36 },
@@ -28,6 +30,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'preset',
       title: 'Métrica A (placeholder)',
       footer: '',
+      layout: DEFAULT_CHART_LAYOUTS['kpi-a'],
       value: '82%',
       caption: '+4 pts vs semana anterior',
       trend: 'up',
@@ -38,6 +41,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'preset',
       title: 'Métrica B (placeholder)',
       footer: '',
+      layout: DEFAULT_CHART_LAYOUTS['kpi-b'],
       value: '17',
       caption: 'estável na semana',
       trend: 'flat',
@@ -48,6 +52,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'preset',
       title: 'Barras (placeholder)',
       footer: 'Atualizado há 2 horas',
+      layout: DEFAULT_CHART_LAYOUTS['bars-placeholder'],
       points: [48, 62, 36, 74, 57, 66, 50].map((value, index) => ({
         label: WEEKDAYS[index],
         value,
@@ -60,6 +65,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'custom',
       title: 'Distribuição (placeholder)',
       footer: 'Criado por você via chat',
+      layout: DEFAULT_CHART_LAYOUTS['donut-placeholder'],
       percentage: 45,
     },
     {
@@ -68,6 +74,7 @@ export function buildDashboardChartsMock(): DashboardChart[] {
       origin: 'preset',
       title: 'Área (placeholder)',
       footer: 'Atualizado há 2 horas',
+      layout: DEFAULT_CHART_LAYOUTS['area-placeholder'],
       points: [30, 42, 50, 44, 34, 40, 58, 66].map((value, index) => ({
         label: `S${index + 1}`,
         value,

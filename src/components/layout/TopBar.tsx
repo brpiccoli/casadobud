@@ -10,7 +10,7 @@ export function TopBar({ menuLabel, onOpenMenu, onNewConversation }: TopBarProps
   return (
     <header className={styles.root}>
       <Button
-        variant="ghost"
+        variant="quiet"
         size="icon-sm"
         className={styles.button}
         onClick={onOpenMenu}
@@ -20,7 +20,7 @@ export function TopBar({ menuLabel, onOpenMenu, onNewConversation }: TopBarProps
       </Button>
       <BudWordmark size="sm" className={styles.wordmark} />
       <Button
-        variant="ghost"
+        variant="quiet"
         size="icon-sm"
         className={styles.button}
         onClick={onNewConversation}

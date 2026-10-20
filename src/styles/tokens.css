@@ -1,0 +1,163 @@
+/*
+ * Único arquivo com valores de cor do app. Componentes consomem apenas os tokens
+ * semânticos (via utilitários do Tailwind mapeados em index.css).
+ *
+ * Tema: atributo `data-theme="dark" | "light"` no <html> (ou em qualquer subárvore).
+ * Sem atributo, vale o tema escuro, que é a identidade principal da casadobud.
+ *
+ * Texto sobre os fundos do tema precisa de contraste AA (4.5:1). No claro, o acento
+ * #3e7a6a fica abaixo disso; por isso texto em acento usa `--mint-ink`, e `--mint`
+ * fica para preenchimentos, bordas, foco e gráficos.
+ */
+
+:root {
+  --palette-ink: #171310;
+  --palette-cream: #eae4d9;
+  --palette-mint: #a8d8cb;
+  --palette-sage: #333e39;
+  --palette-slate: #2a3440;
+  --palette-taupe: #8f887b;
+  --palette-white: #ffffff;
+
+  --sage: var(--palette-sage);
+  --slate: var(--palette-slate);
+  --taupe: var(--palette-taupe);
+  --cream: var(--palette-cream);
+
+  /* Orb do Bud no modo voz: mesmas cores nos dois temas, a tela de voz é sempre escura. */
+  --orb-base: #e9f4ee;
+  --orb-deep: #4e8e7c;
+  --orb-light: #f6f1e6;
+  --orb-sky: #9cc4cf;
+}
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --background: var(--palette-ink);
+  --foreground: var(--palette-cream);
+  --muted-foreground: #a39c93;
+  --foreground-subtle: #6e675f;
+
+  --card: #201b18;
+  --card-foreground: var(--foreground);
+  --popover: #2a2522;
+  --popover-foreground: var(--foreground);
+  --pill: #2a2522;
+  --field: #26211e;
+
+  --primary: var(--palette-cream);
+  --primary-foreground: var(--palette-ink);
+  --secondary: rgba(255, 255, 255, 0.07);
+  --secondary-foreground: var(--foreground);
+  --muted: rgba(255, 255, 255, 0.05);
+  --accent: rgba(255, 255, 255, 0.06);
+  --accent-foreground: var(--foreground);
+
+  --mint: var(--palette-mint);
+  --mint-ink: var(--palette-mint);
+  --mint-foreground: var(--palette-ink);
+  --mint-soft: var(--palette-sage);
+  --cta: var(--palette-white);
+  --cta-foreground: var(--palette-ink);
+
+  --chip: rgba(255, 255, 255, 0.07);
+  --tag: rgba(255, 255, 255, 0.08);
+  --control: rgba(255, 255, 255, 0.1);
+  --switch-track-on: rgba(168, 216, 203, 0.35);
+  --switch-track-off: #2a2522;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --input: var(--border);
+  --ring: var(--palette-mint);
+
+  --destructive: #e5736a;
+  --destructive-foreground: var(--palette-ink);
+
+  --overlay: rgba(10, 8, 6, 0.6);
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --glow: var(--palette-slate);
+
+  --chart-1: var(--palette-mint);
+  --chart-2: var(--palette-taupe);
+  --chart-3: var(--palette-slate);
+  --chart-4: var(--foreground-subtle);
+  --chart-5: var(--palette-sage);
+  --chart-grid: var(--border);
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--mint);
+  --sidebar-primary-foreground: var(--mint-foreground);
+  --sidebar-accent: rgba(255, 255, 255, 0.06);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --background: #f5f1e9;
+  --foreground: #2b2620;
+  --muted-foreground: #5c564f;
+  --foreground-subtle: #6e675f;
+
+  --card: #fcfaf5;
+  --card-foreground: var(--foreground);
+  --popover: #fcfaf5;
+  --popover-foreground: var(--foreground);
+  --pill: #e8e2d6;
+  --field: #f7f3eb;
+
+  --primary: #2b2620;
+  --primary-foreground: #f5f1e9;
+  --secondary: rgba(0, 0, 0, 0.04);
+  --secondary-foreground: var(--foreground);
+  --muted: rgba(0, 0, 0, 0.04);
+  --accent: rgba(0, 0, 0, 0.05);
+  --accent-foreground: var(--foreground);
+
+  --mint: #3e7a6a;
+  --mint-ink: #376d5e;
+  --mint-foreground: #fcfaf5;
+  --mint-soft: #dce9e2;
+  --cta: #2b2620;
+  --cta-foreground: #f5f1e9;
+
+  --chip: rgba(0, 0, 0, 0.04);
+  --tag: rgba(0, 0, 0, 0.06);
+  --control: rgba(0, 0, 0, 0.08);
+  --switch-track-on: rgba(62, 122, 106, 0.3);
+  --switch-track-off: #e8e2d6;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --input: var(--border);
+  --ring: #3e7a6a;
+
+  --destructive: #b5473d;
+  --destructive-foreground: #fcfaf5;
+
+  --overlay: rgba(43, 38, 32, 0.25);
+  --shadow-color: rgba(43, 38, 32, 0.12);
+  --glow: #dce9e2;
+
+  --chart-1: #3e7a6a;
+  --chart-2: var(--palette-taupe);
+  --chart-3: #e8e2d6;
+  --chart-4: var(--foreground-subtle);
+  --chart-5: #dce9e2;
+  --chart-grid: var(--border);
+
+  --sidebar: #efeae0;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--mint);
+  --sidebar-primary-foreground: var(--mint-foreground);
+  --sidebar-accent: #e4ded2;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}

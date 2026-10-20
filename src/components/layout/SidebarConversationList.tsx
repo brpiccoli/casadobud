@@ -3,19 +3,61 @@ import { Link } from 'react-router';
 
 import { ROUTES } from '@/constants/routes';
 import {
+  buildSearchExcerpt,
   filterConversations,
   groupConversationsByRecency,
 } from '@/features/conversations/conversations.utils';
+import type { StaffConversation } from '@/features/conversations/conversations.types';
 
 import {
   sidebarConversationItemVariants,
   sidebarConversationStyles as styles,
+  sidebarSearchResultVariants,
 } from './Sidebar.styles';
-import type { SidebarConversationListProps } from './Sidebar.types';
+import type { SidebarConversationListProps, SidebarSearchResultProps } from './Sidebar.types';
 
 function formatResultsCount(count: number): string {
+  if (count === 0) return 'Nenhuma conversa encontrada';
   if (count === 1) return '1 conversa encontrada';
   return `${count} conversas encontradas`;
+}
+
+function conversationPath(conversation: StaffConversation): string {
+  return `${ROUTES.chat}/${conversation.id}`;
+}
+
+function SidebarSearchResult({
+  conversation,
+  searchQuery,
+  isActive,
+  onNavigate,
+}: SidebarSearchResultProps) {
+  const excerpt = useMemo(
+    () => buildSearchExcerpt(conversation.preview, searchQuery),
+    [conversation.preview, searchQuery],
+  );
+
+  return (
+    <Link
+      to={conversationPath(conversation)}
+      aria-current={isActive ? 'page' : undefined}
+      onClick={onNavigate}
+      className={sidebarSearchResultVariants({ active: isActive })}
+    >
+      <span className={styles.resultTitle}>{conversation.title}</span>
+      <span className={styles.resultExcerpt}>
+        {excerpt ? (
+          <>
+            {excerpt.before}
+            <mark className={styles.resultHighlight}>{excerpt.match}</mark>
+            {excerpt.after}
+          </>
+        ) : (
+          conversation.preview
+        )}
+      </span>
+    </Link>
+  );
 }
 
 export function SidebarConversationList({
@@ -36,25 +78,21 @@ export function SidebarConversationList({
   if (isSearching) {
     return (
       <div className={styles.list}>
-        <div className={styles.group}>
-          <p className={styles.groupLabel}>Resultados</p>
+        <section className={styles.group} aria-label="Resultados da busca">
+          <p className={styles.resultsLabel}>Resultados</p>
           {results.map((conversation) => (
-            <Link
+            <SidebarSearchResult
               key={conversation.id}
-              to={`${ROUTES.chat}/${conversation.id}`}
-              onClick={onNavigate}
-              className={sidebarConversationItemVariants({
-                active: conversation.id === activeConversationId,
-              })}
-            >
-              <span className="truncate">{conversation.title}</span>
-              <span className={styles.preview}>{conversation.preview}</span>
-            </Link>
+              conversation={conversation}
+              searchQuery={searchQuery}
+              isActive={conversation.id === activeConversationId}
+              onNavigate={onNavigate}
+            />
           ))}
           <p className={styles.resultsCount} aria-live="polite">
             {formatResultsCount(results.length)}
           </p>
-        </div>
+        </section>
       </div>
     );
   }
@@ -75,7 +113,7 @@ export function SidebarConversationList({
           {group.conversations.map((conversation) => (
             <Link
               key={conversation.id}
-              to={`${ROUTES.chat}/${conversation.id}`}
+              to={conversationPath(conversation)}
               aria-current={conversation.id === activeConversationId ? 'page' : undefined}
               onClick={onNavigate}
               className={sidebarConversationItemVariants({

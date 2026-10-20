@@ -91,13 +91,7 @@ export function Login() {
           </Link>
         </div>
 
-        <Button
-          type="submit"
-          variant="cta"
-          size="xl"
-          className={styles.submit}
-          disabled={isSubmitting}
-        >
+        <Button type="submit" size="xl" className={styles.submit} disabled={isSubmitting}>
           {isSubmitting ? 'Entrando…' : 'Entrar'}
         </Button>
       </form>

@@ -1,7 +1,9 @@
 import {
   CATEGORY_LABELS,
   GRAPH_TYPE_SHORT_LABELS,
+  GROUPING_PHRASES,
   METRIC_DEFINITIONS,
+  METRIC_SUBJECTS,
   WEEKDAY_FULL_LABELS,
   WEEKDAY_LABELS,
 } from './bud.constants';
@@ -40,23 +42,9 @@ interface ToolExchange {
 
 const PLACEHOLDER_NOTICE =
   'Os valores são ilustrativos (placeholder), só pra gente alinhar o formato.';
+const BUILDER_HANDOFF_REPLY = 'Vou abrir nos Gráficos pra gente ajustar juntos.';
 const NO_FOCUS_REPLY =
   'Ainda não tem nenhum gráfico aberto. Quer que eu monte um? Me diz a métrica, por exemplo "check-ins por dia do Sub-17".';
-
-const METRIC_SUBJECT: Record<BudMetric, { text: string; plural: boolean }> = {
-  check_ins: { text: 'os check-ins', plural: true },
-  sono: { text: 'o sono', plural: false },
-  humor: { text: 'o humor', plural: false },
-  engajamento: { text: 'o engajamento', plural: false },
-  ritmo: { text: 'o ritmo', plural: false },
-};
-
-const GROUPING_PHRASE: Record<GraphSpec['agrupamento'], string> = {
-  dia_semana: 'dia a dia',
-  data: 'data a data',
-  atleta: 'atleta por atleta',
-  grupo: 'por grupo',
-};
 
 function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -129,7 +117,7 @@ export function describeInsight(spec: GraphSpec): string {
 
 function describeTrend(spec: GraphSpec): string {
   const [primary] = spec.series;
-  const subject = METRIC_SUBJECT[spec.metrica];
+  const subject = METRIC_SUBJECTS[spec.metrica];
   const peak = primary.pontos[findPeakIndex(primary) ?? 0];
   const peakText =
     spec.agrupamento === 'dia_semana' && peak
@@ -155,12 +143,12 @@ function describeCreatedGraph(
     return `${describeTrend(spec)}\n\nMontei uma visão resumida com os dados do companion.${placeholderNotice(context)}`;
   }
 
-  const subject = METRIC_SUBJECT[spec.metrica].text;
+  const subject = METRIC_SUBJECTS[spec.metrica].text;
   const target = categoryPhrase(spec.categoria);
   const intro =
     spec.tipo === 'kpi'
       ? `Montei um indicador com ${subject} ${target}.`
-      : `Montei o gráfico de ${GRAPH_TYPE_SHORT_LABELS[spec.tipo]} com ${subject} ${target}, ${GROUPING_PHRASE[spec.agrupamento]}.`;
+      : `Montei o gráfico de ${GRAPH_TYPE_SHORT_LABELS[spec.tipo]} com ${subject} ${target}, ${GROUPING_PHRASES[spec.agrupamento]}.`;
   return `${intro} ${describeInsight(spec)}${placeholderNotice(context)}`.trim();
 }
 
@@ -207,7 +195,7 @@ function describePatch(
     sentences.push('Voltei para todos os atletas.');
   }
   if (patch.agrupamento) {
-    sentences.push(`Agora está separado ${GROUPING_PHRASE[patch.agrupamento]}.`);
+    sentences.push(`Agora está separado ${GROUPING_PHRASES[patch.agrupamento]}.`);
   }
   if (patch.titulo) {
     sentences.push(`Renomeei para "${patch.titulo}".`);
@@ -492,7 +480,15 @@ export function createLocalBudBrain({
         return [{ call: item.call, outcome: result.outcome }];
       });
 
-      return reply(compose(planned.intent, context, planned.previousFocus, exchanges));
+      const text = compose(planned.intent, context, planned.previousFocus, exchanges);
+      const created = findOutcome(exchanges, 'criar_grafico');
+      const isChartRequest = planned.intent.kind === 'create' && planned.intent.style === 'chart';
+      if (!isChartRequest || context.tela_atual !== 'chat' || !created?.ok) return reply(text);
+
+      return {
+        text: `${text} ${BUILDER_HANDOFF_REPLY}`,
+        toolCalls: [call('abrir_no_builder', { id: created.dados.id })],
+      };
     },
   };
 }

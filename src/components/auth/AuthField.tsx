@@ -24,9 +24,7 @@ export function AuthField({
 
   return (
     <div className={cn(styles.root, className)}>
-      <Label htmlFor={id} className={styles.label}>
-        {label}
-      </Label>
+      <Label htmlFor={id}>{label}</Label>
       <div className={styles.control}>
         {Icon ? <Icon className={styles.leadingIcon} aria-hidden /> : null}
         <Input
@@ -34,11 +32,7 @@ export function AuthField({
           type={resolvedType}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className={cn(
-            styles.input,
-            Icon && styles.inputWithIcon,
-            isPassword && styles.inputWithToggle,
-          )}
+          className={cn(Icon && styles.inputWithIcon, isPassword && styles.inputWithToggle)}
           {...inputProps}
         />
         {isPassword ? (

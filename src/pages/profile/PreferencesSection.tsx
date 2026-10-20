@@ -6,7 +6,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { profilePageStyles as styles } from './Profile.styles';
 
 export function PreferencesSection() {
-  const { isDarkMode, setPreference } = useTheme();
+  const { isDarkMode, setMode } = useTheme();
 
   return (
     <section className={styles.section} aria-labelledby="profile-preferences-title">
@@ -23,7 +23,7 @@ export function PreferencesSection() {
           <Switch
             id="preference-light-theme"
             checked={!isDarkMode}
-            onCheckedChange={(checked) => void setPreference(checked ? 'light' : 'dark')}
+            onCheckedChange={(checked) => void setMode(checked ? 'light' : 'dark')}
           />
         </li>
         <li className={styles.preferenceRow}>

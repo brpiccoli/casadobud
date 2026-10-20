@@ -1,3 +1,4 @@
+import { defaultLayoutForKind } from '@/features/charts/charts.layout';
 import type { DashboardChart, KpiTrend } from '@/features/charts/charts.types';
 
 import {
@@ -260,6 +261,7 @@ export function toDashboardChart(
     return {
       ...base,
       kind: 'kpi',
+      layout: defaultLayoutForKind('kpi'),
       value: formatMetricSummary(spec.metrica, summary.valor),
       caption: formatVariation(summary.variacao),
       trend: resolveTrend(summary.variacao),
@@ -269,14 +271,16 @@ export function toDashboardChart(
   if (spec.tipo === 'donut') {
     const max = METRIC_DEFINITIONS[spec.metrica].donutMax;
     const percentage = Math.round(Math.min(Math.max((summary.valor / max) * 100, 0), 100));
-    return { ...base, kind: 'donut', percentage };
+    return { ...base, kind: 'donut', layout: defaultLayoutForKind('donut'), percentage };
   }
 
   const kindByType = { linha: 'line', barras: 'bar', area: 'area' } as const;
+  const kind = kindByType[spec.tipo];
 
   return {
     ...base,
-    kind: kindByType[spec.tipo],
+    kind,
+    layout: defaultLayoutForKind(kind),
     points: (primary?.pontos ?? []).map((point, index) => ({
       label: point.rotulo,
       value: point.valor,

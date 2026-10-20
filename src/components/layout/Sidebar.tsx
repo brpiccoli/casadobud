@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChartColumn, MessageCircle, PanelLeft, Plus, Search } from 'lucide-react';
+import { useState, type KeyboardEvent } from 'react';
+import { ChartColumn, MessageCircle, PanelLeft, Plus, Search, X } from 'lucide-react';
 import { NavLink, useNavigate, useParams } from 'react-router';
 
 import { BudWordmark } from '@/components/brand/BudWordmark';
@@ -31,8 +31,16 @@ export function Sidebar({
   const [searchQuery, setSearchQuery] = useState('');
   const { data: conversations = [] } = useStaffConversationsQuery();
 
+  const clearSearch = () => setSearchQuery('');
+
+  const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    clearSearch();
+  };
+
   const handleNewConversation = () => {
-    setSearchQuery('');
+    clearSearch();
     navigate(ROUTES.chat);
     onNavigate?.();
   };
@@ -41,7 +49,7 @@ export function Sidebar({
     <aside className={cn(styles.root, className)} aria-label="Navegação principal">
       <div className={styles.header}>
         <Button
-          variant="ghost"
+          variant="quiet"
           size="icon-sm"
           className={styles.collapseButton}
           onClick={onCollapse}
@@ -58,13 +66,25 @@ export function Sidebar({
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
+          onKeyDown={handleSearchKeyDown}
           placeholder="Buscar"
           aria-label="Buscar conversas"
           className={styles.searchInput}
         />
+        {searchQuery ? (
+          <Button
+            variant="quiet"
+            size="icon-xs"
+            className={styles.clearSearchButton}
+            onClick={clearSearch}
+            aria-label="Limpar busca"
+          >
+            <X className="size-3.75" />
+          </Button>
+        ) : null}
       </div>
 
-      <Button variant="ghost" className={styles.newConversation} onClick={handleNewConversation}>
+      <Button variant="quiet" className={styles.newConversation} onClick={handleNewConversation}>
         <Plus />
         Nova conversa
       </Button>
@@ -74,7 +94,7 @@ export function Sidebar({
           <NavLink
             key={to}
             to={to}
-            end={to !== ROUTES.chat}
+            end={to !== ROUTES.chat && to !== ROUTES.charts}
             onClick={onNavigate}
             className={({ isActive }) => sidebarNavItemVariants({ active: isActive })}
           >
